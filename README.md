@@ -4,10 +4,10 @@ Secret Management plugin is used to store any upstream tokens in a secured manne
 This plugin is useful when upstream tokens should not be shared with client and to be maintained in Kong for upstream authentication. 
 This plugin uses Kong's Keyring feature to store secrets in encrypted format.
 Kong's Keyring feature uses encryption at REST (only in DB). But, this plugin is enhanced to use Kong's Keyring feature
--  To encrypt in Kong admin API layer
--  To encrypt in Kong GUI layer
--  To encrypt in Kong DB layer 
--  To decrypt only in transit (Kong Proxy layer) 
+-  To encrypt secret value in Kong admin API layer
+-  To encrypt secret value in Kong GUI layer
+-  To encrypt secret value in Kong DB layer 
+-  To decrypt secret value only in transit (Kong Proxy layer) 
 
 By this way, this plugin ensures encryption is done in all layers of Kong with atmost security.
 
