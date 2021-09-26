@@ -1,10 +1,19 @@
 # Secret Management Plugin
 ## Overview
-This plugin is used to store any upstream tokens in a secured manner in Kong and export as header and send to Upstream. 
+Secret Management plugin is used to store any upstream tokens in a secured manner in Kong and export as header and send to upstream. 
+This plugin is useful when upstream tokens should not be shared with client and to be maintained in Kong for upstream authentication. 
 This plugin uses Kong's Keyring feature to store secrets in encrypted format.
-Kong's Keyring feature uses encryption at REST (only in DB). But, this plugin is enhanced to use Kong's Keyring feature to encrypt in Kong admin API layer, Kong GUI layer, encrypt in DB and decrypt only in transit (Kong Proxy layer).
+Kong's Keyring feature uses encryption at REST (only in DB). But, this plugin is enhanced to use Kong's Keyring feature
+-  To encrypt in Kong admin API layer
+-  To encrypt in Kong GUI layer
+-  To encrypt in Kong DB layer 
+-  To decrypt only in transit (Kong Proxy layer) 
+
 By this way, this plugin ensures encryption is done in all layers of Kong with atmost security.
 
+## Additional Features
+- To avoid re-encryption of secret value on deck sync operation, we should set config.is_secret_value_encrypted flag to true
+- To use this secret value in any other custom plugins, we have a feature to export as a Kong shared ctx variable and use in other plugins
 
 ## Tested in Kong Release
 Kong Enterprise 2.2.1.0
@@ -12,10 +21,20 @@ Kong Enterprise 2.2.1.0
 ## Installation
 Recommended:
 ```
-$ luarocks install secret-mgmt
+git clone https://github.com/premaind/secret-mgmt  
+cd secret-mgmt
+$ luarocks install kong-plugin-secret-mgmt-0.1.0-1.all.rock
 ```
 
-## Keyring Enablement in Kong
+Other:
+```
+$ git clone https://github.com/premaind/secret-mgmt  
+cd secret-mgmt
+$ luarocks make kong-plugin-secret-mgmt-0.1.0-1.rockspec
+```
+
+## Pre-requisite to use this plugin
+### Keyring Enablement in Kong
 The plugin requires Kong's Keyring feature to be enabled.
 
 **Step:1 - Generate keyring certificates using below commands**
@@ -28,8 +47,8 @@ The plugin requires Kong's Keyring feature to be enabled.
 ```
 keyring_enabled = on 
 keyring_strategy = cluster 
-keyring_public_key = /root/keyring/cert.pem 
-keyring_private_key = /root/keyring/key.pem 
+keyring_public_key = /path/to/cert.pem 
+keyring_private_key = /path/to/key.pem 
 ```
 
 **Step:3 - Restart Kong**
@@ -78,10 +97,26 @@ curl -X POST http://{HOST}:8001/services/{SERVICE}/plugins \ <br />
 
 ### Declarative (YAML)
 ```
-
+plugins:
+- name: secret-mgmt
+  config:
+    export_as_header: true
+    export_as_header_name: {http_header_name}
+    export_as_header_prefix: {http_header_prefix}
+    export_as_kong_ctx_shared: false
+    export_as_kong_ctx_shared_variable_name: null
+    is_secret_value_encrypted: false
+    secret_name: {secret_name}
+    secret_value: {secret_value}
+  enabled: true
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
 ```
 
-### Paramters
+### Parameters
 Here's a list of all the parameters which can be used in this plugin's configuration:
 
 | FORM PARAMETER                                           | DESCRIPTION                                             |
@@ -112,10 +147,10 @@ Here's a list of all the parameters which can be used in this plugin's configura
 
 
 ## Request Processing Errors
-| ERROR                                                    | Fix Required                                                  |
-| ---                                                      | -----------                                                   |
-| Active Key Id not found for Keyring                      | Activate the key/ or Import the Key for Keyring               |
-| Keyring should be enabled                                | Enable Keyring in kong.conf                                   |
+| HTTP ERROR Code     | HTTP Error Message                                            | Fix Required                                                  |
+| ---                 | -----------                                                   |-----------                                                    |
+| 500                 | Active Key Id not found for Keyring                           | Activate the key/ or Import the Key for Keyring               |
+| 500                 | Keyring should be enabled                                     | Enable Keyring in kong.conf                                   |
 
 ## Contributors
 Design and Implementation By – Prema.Namasivayam@VERIFONE.com  <br />
