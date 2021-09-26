@@ -64,6 +64,7 @@ keyring_private_key = /path/to/key.pem
 ```
 
 **Step:5 - Activate Key** 
+
 Note: The id in above response("6jtjRnLX") is used here to activate the key 
 ```
 curl -s localhost:8001/keyring/activate -d key=6jtjRnLX 
@@ -87,11 +88,11 @@ data="eyJrIjoiVnZJQ3NkNHhQNkt5ZFI3QjBnTkVaS205NUlDMnpEVGU1YVBqK01sOWV4RldsdjVZRD
 ## Plugin Configuration
 ### Admin API
 ```
-curl -X POST http://{HOST}:8001/services/{SERVICE}/plugins \ <br />
- --data "name=secret-mgmt" \ <br />
- --data "config.secret_name=<secret_name>" \ <br />
- --data "config.secret_value=<secret_token_value>" \ <br />
- --data "config.export_as_header=true" \ <br />
+curl -X POST http://{HOST}:8001/services/{SERVICE}/plugins \ 
+ --data "name=secret-mgmt" \ 
+ --data "config.secret_name=<secret_name>" \ 
+ --data "config.secret_value=<secret_token_value>" \ 
+ --data "config.export_as_header=true" \ 
  --data "config.export_as_header_name=<http_header_name>" \
 ```
 
@@ -153,6 +154,8 @@ Here's a list of all the parameters which can be used in this plugin's configura
 | 500                 | Keyring should be enabled                                     | Enable Keyring in kong.conf                                   |
 
 ## Contributors
-Design and Implementation By – Prema.Namasivayam@VERIFONE.com  <br />
-Guided By:  Vineet.Dutt@VERIFONE.com <br />
-Supported By: Satyajit.Sial@VERIFONE.com <br />
+Design and Implementation By – Prema.Namasivayam@VERIFONE.com  
+
+Guided By:  Vineet.Dutt@VERIFONE.com 
+
+Supported By: Satyajit.Sial@VERIFONE.com
