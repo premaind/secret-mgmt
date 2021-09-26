@@ -21,20 +21,20 @@ Kong Enterprise 2.2.1.0
 ## Installation
 Recommended:
 ```
-git clone https://github.com/premaind/secret-mgmt  
-cd secret-mgmt
+$ git clone https://github.com/premaind/secret-mgmt  
+$ cd secret-mgmt
 $ luarocks install kong-plugin-secret-mgmt-0.1.0-1.all.rock
 ```
 
 Other:
 ```
 $ git clone https://github.com/premaind/secret-mgmt  
-cd secret-mgmt
+$ cd secret-mgmt
 $ luarocks make kong-plugin-secret-mgmt-0.1.0-1.rockspec
 ```
 
 ## Pre-requisite to use this plugin
-### Keyring Enablement in Kong
+### Keyring Enablement in Kong and include Custom Plugin name in kong.conf
 The plugin requires Kong's Keyring feature to be enabled.
 
 **Step:1 - Generate keyring certificates using below commands**
@@ -49,6 +49,7 @@ keyring_enabled = on
 keyring_strategy = cluster 
 keyring_public_key = /path/to/cert.pem 
 keyring_private_key = /path/to/key.pem 
+plugins = bundled,secret-mgmt
 ```
 
 **Step:3 - Restart Kong**
