@@ -37,14 +37,14 @@ local function set_header(conf, value)
   end
 end
 
--- This method is to set the secret value as an environment variable dynamically when the request reaches this plugin
+-- This method is to set the secret value as an kong.ctx.shared variable dynamically when the request reaches this plugin
 local function set_shared_ctx_variable(conf, value)
   kong.log.info("################# set_shared_ctx_variable start ")
   kong.ctx.shared[conf.export_as_kong_ctx_shared_variable_name] = value 
 end
 
 -- This will execute when the client request hits the plugin
--- This method is to decrypt the secret value and export as header or as environment variable to achieve decryption in transit
+-- This method is to decrypt the secret value and export as header or as kong.ctx.shared variable to achieve decryption in transit
 function secretMgmt:access(conf)
     kong.log.info("######################### SecretMgmt Access Phase start ##################### ")
     kong.log.info("conf.export_as_kong_ctx_shared_variable: ",conf.export_as_kong_ctx_shared_variable)
